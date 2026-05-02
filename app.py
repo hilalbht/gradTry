@@ -1,12 +1,23 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import gdown
+
+# -----------------------------
+# MODELİ GOOGLE DRIVE'DAN ÇEK
+# -----------------------------
+file_id = "1Tugqu6peZEyDUGKTqtHmOF_1kBcowZWt"
+url = f"https://drive.google.com/uc?id={file_id}"
+
+gdown.download(url, "model.pkl", quiet=False)
 
 model = joblib.load("model.pkl")
 
+# -----------------------------
+# ARAYÜZ
+# -----------------------------
 st.title("🧬 Liver Cirrhosis Stage Prediction")
 
-# INPUTLAR
 Age = st.number_input("Age")
 Sex = st.selectbox("Sex", ["M", "F"])
 Bilirubin = st.number_input("Bilirubin")
@@ -23,7 +34,9 @@ Spiders = st.selectbox("Spiders", ["Y", "N"])
 Edema = st.selectbox("Edema", ["Y", "N"])
 Drug = st.selectbox("Drug", ["D-penicillamine", "Placebo"])
 
+# -----------------------------
 # TAHMİN
+# -----------------------------
 if st.button("Tahmin Et"):
     data = pd.DataFrame([{
         "Age": Age,
@@ -44,4 +57,4 @@ if st.button("Tahmin Et"):
 
     pred = model.predict(data)[0]
 
-    st.success(f"Tahmin edilen evre: Stage {pred + 1}")
+    st.success(f"🎯 Tahmin edilen evre: Stage {pred + 1}")
